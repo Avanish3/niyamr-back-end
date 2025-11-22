@@ -14,7 +14,13 @@ const upload = multer();
 app.post("/check", upload.single("pdf"), async (req, res) => {
   try {
     const pdfBuffer = req.file.buffer;
-    const rules = JSON.parse(req.body.rules);
+    let rules = [];
+try {
+  rules = JSON.parse(req.body.rules);
+} catch {
+  return res.status(400).json({ error: "Invalid rules format" });
+}
+
 
     const pdfData = await PDFParse(pdfBuffer);
     const text = pdfData.text;
